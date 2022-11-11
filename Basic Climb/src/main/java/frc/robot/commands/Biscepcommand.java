@@ -23,7 +23,6 @@ public Biscepcommand(ClimbSubsystem m_subsystem, double m_speed) {
     // Called when the command is initially scheduled.
     @Override
     public void initialize(){
-
     }
   
     // Called every time the scheduler runs while the command is scheduled.

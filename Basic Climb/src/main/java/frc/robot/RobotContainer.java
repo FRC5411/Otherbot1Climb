@@ -6,10 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ArmCommand;
-import frc.robot.commands.Biscepcommand;
 import frc.robot.subsystems.ClimbSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
 /**
@@ -20,24 +19,18 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ClimbSubsystem m_exampleSubsystem = new ClimbSubsystem();
+  private final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
   private XboxController controller;
-  private double LT;
-  private double RT;
-  private double armspeed;
-  private double biscepspeed;  
-  private final ArmCommand m_armCommand = new ArmCommand(m_exampleSubsystem , armspeed);
-  private final Biscepcommand m_Biscepcommand = new Biscepcommand(m_exampleSubsystem, biscepspeed);
+  private JoystickButton rtButton;
+  private JoystickButton ltButton; 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     controller = new XboxController(0);
-    LT = controller.getLeftTriggerAxis();
-    RT = controller.getRightTriggerAxis();
-    armspeed = LT;
-    biscepspeed = RT;
     configureButtonBindings();
-    
+    rtButton = new JoystickButton(controller, XboxController.Button.kRightBumper.value);
+    ltButton = new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
   }
+
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -45,19 +38,32 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    rtButton.whenPressed(new InstantCommand(()-> {
+      m_ClimbSubsystem.hook();
+    } ,m_ClimbSubsystem));
+    ltButton.whenPressed(new InstantCommand(()-> {
+      m_ClimbSubsystem.thumb();
+    } ,m_ClimbSubsystem));
+    rtButton.whenReleased(new InstantCommand(()-> {
+      m_ClimbSubsystem.preet();
+    } ,m_ClimbSubsystem));
+    ltButton.whenReleased(new InstantCommand(()-> {
+      m_ClimbSubsystem.preet();
+    } ,m_ClimbSubsystem));
+
+
+
+
+
+
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  public Command getarmCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_armCommand;
-  }
-  public Command getbiscepCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_Biscepcommand;
-  }
+
+  
 }
